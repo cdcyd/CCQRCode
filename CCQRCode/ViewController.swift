@@ -70,10 +70,23 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
          */
         let features = detector?.features(in: ciimage, options: nil)
 
+        picker.dismiss(animated: true, completion: nil)
         // 遍历出二维码(通过截屏的二维码很容易识别出，如果是拍照的二维码，很可能识别不出来)
         for item in features! where item.isKind(of: CIQRCodeFeature.self) {
-            print((item as! CIQRCodeFeature).messageString ?? "")
+            let ms = (item as! CIQRCodeFeature).messageString ?? ""
+            let vc = UIAlertController(title: "提示", message: ms, preferredStyle: .alert)
+            vc.addAction(UIAlertAction(title: "确定", style: .destructive, handler: { (_) in
+
+            }))
+            self.present(vc, animated: true, completion: nil)
+            return
         }
+        let vc = UIAlertController(title: "提示", message: "没有识别到二维码", preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "确定", style: .destructive, handler: { (_) in
+
+        }))
+        self.present(vc, animated: true, completion: nil)
+        return
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
